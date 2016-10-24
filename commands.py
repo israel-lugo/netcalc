@@ -98,7 +98,36 @@ def do_add(args):
         print(i)
 
 
+
+def register_subtract(subparsers):
+    """Register the sub command on an argparse subparsers object.
+
+    Returns the subparser and the action function for this command.
+
+    """
+    subparser = add_parser_compat(subparsers, 'subtract', aliases=["exclude"],
+            help="subtract a network from another, dividing as necessary")
+
+    subparser.add_argument('container', metavar='CONTAINER',
+            type=network_address, help="container network address")
+
+    subparser.add_argument('network', metavar='REMOVE', type=network_address,
+            help="network address to remove")
+
+    return subparser, do_subtract
+
+
+def do_subtract(args):
+    """Subtract a network from another, dividing as necessary."""
+
+    merged = netaddr.cidr_exclude(args.container, args.network)
+
+    for i in merged:
+        print(i)
+
+
+
 command_registrators = [
-    register_add,
+    register_add, register_subtract,
 ]
 """List of command registrator functions."""
