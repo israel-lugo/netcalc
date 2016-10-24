@@ -21,13 +21,16 @@
 # For suggestions, feedback or bug reports: israel.lugo@lugosys.com
 
 
+"""Main program file."""
+
+
 # Be compatible with Python 3
 from __future__ import print_function
 
 import sys
 import argparse
 
-import netaddr
+import commands
 
 
 __version__ = "0.1.0"
@@ -35,30 +38,6 @@ __version__ = "0.1.0"
 
 __all__ = [ 'main' ]
 
-
-
-def do_add(args):
-    """Add networks together, merging as much as possible."""
-
-    merged = netaddr.cidr_merge(args.networks)
-
-    for i in merged:
-        print(i)
-
-
-def network_address(string):
-    """Convert a string to a network address, if possible.
-
-    Returns a netaddr.IPNetwork instance. Raises netaddr.ArgumentTypeError
-    if string is not a valid network.
-
-    """
-    try:
-        network = netaddr.IPNetwork(string)
-    except netaddr.AddrFormatError as e:
-        raise argparse.ArgumentTypeError("invalid network address '%s'" % string)
-
-    return network
 
 
 def parse_args():
@@ -72,11 +51,9 @@ def parse_args():
 
     subparsers = parser.add_subparsers(help="available commands", metavar="COMMAND")
 
-    parser_add = subparsers.add_parser('add',
-                                       help="add networks, merging as much as possible")
-    parser_add.add_argument('networks', metavar='NETWORK', type=network_address,
-                            nargs='+', help="a network address")
-    parser_add.set_defaults(func=do_add)
+    for registerer in commands.command_registrators:
+        subparser, func = registerer(subparsers)
+        subparser.set_defaults(func=func)
 
     args = parser.parse_args()
 
