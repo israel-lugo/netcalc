@@ -80,11 +80,11 @@ def register_add(subparsers):
     Returns the subparser and the action function for this command.
 
     """
-    subparser = add_parser_compat(subparsers, 'add',
-        help="add networks, merging as much as possible", aliases=["merge"])
+    subparser = add_parser_compat(subparsers, 'add', aliases=["merge"],
+            help="add networks, merging as much as possible")
 
-    subparser.add_argument('networks', metavar='NETWORK', type=network_address,
-        nargs='+', help="a network address")
+    subparser.add_argument('networks', metavar='NETWORK',
+            type=network_address, nargs='+', help="a network address")
 
     return subparser, do_add
 
