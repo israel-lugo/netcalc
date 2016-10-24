@@ -120,9 +120,9 @@ def register_subtract(subparsers):
 def do_subtract(args):
     """Subtract a network from another, dividing as necessary."""
 
-    merged = netaddr.cidr_exclude(args.container, args.network)
+    remainder = netaddr.cidr_exclude(args.container, args.network)
 
-    for i in merged:
+    for i in remainder:
         print(i)
 
 
