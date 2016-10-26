@@ -27,6 +27,8 @@
 # Be compatible with Python 3
 from __future__ import print_function
 
+import sys
+
 import netaddr
 
 
@@ -37,16 +39,15 @@ def add_parser_compat(subparsers, *args, **kwargs):
     """Add a parser to an argparse subparsers object.
 
     Adds the parser in a Python 2/3 compatible manner. In particular,
-    Python 2 doesn't support the aliases keyword argument. Tries to use
-    this option it if possible, omit it otherwise.
+    Python 2's argparse doesn't support the aliases keyword argument to
+    add_parser(). Uses this option if possible, omits it otherwise.
 
     """
-    try:
-        subparser = subparsers.add_parser(*args, **kwargs)
-
-    except TypeError as e:
-        # Failed. We're probably running on Python 2.x, which doesn't
-        # support the "aliases" keyword argument. Try again.
+    if sys.version_info >= (3, 2):
+        kwargs2 = kwargs
+    else:
+        # Python 2.x's argparse doesn't support the "aliases" keyword
+        # argument. Remove it if present.
         kwargs2 = kwargs.copy()
         try:
             del kwargs2['aliases']
@@ -54,7 +55,7 @@ def add_parser_compat(subparsers, *args, **kwargs):
             # there is no "aliases", original error was something else
             raise e
 
-        subparser = subparsers.add_parser(*args, **kwargs2)
+    subparser = subparsers.add_parser(*args, **kwargs2)
 
     return subparser
 
