@@ -32,35 +32,8 @@ import sys
 import netaddr
 
 
-__all__ = [ 'command_registrators' ]
 
-
-def add_parser_compat(subparsers, *args, **kwargs):
-    """Add a parser to an argparse subparsers object.
-
-    Adds the parser in a Python 2/3 compatible manner. In particular,
-    Python 2's argparse doesn't support the aliases keyword argument to
-    add_parser(). Uses this option if possible, omits it otherwise.
-
-    """
-    if sys.version_info >= (3, 2):
-        kwargs2 = kwargs
-    else:
-        # Python 2.x's argparse doesn't support the "aliases" keyword
-        # argument. Remove it if present.
-        kwargs2 = kwargs.copy()
-        try:
-            del kwargs2['aliases']
-        except KeyError:
-            # there is no "aliases", original error was something else
-            raise e
-
-    subparser = subparsers.add_parser(*args, **kwargs2)
-
-    return subparser
-
-
-def network_address(string):
+def _network_address(string):
     """Convert a string to a network address, if possible.
 
     Returns a netaddr.IPNetwork instance. Raises netaddr.ArgumentTypeError
@@ -75,60 +48,110 @@ def network_address(string):
     return network
 
 
-def register_add(subparsers):
-    """Register the add command on an argparse subparsers object.
 
-    Returns the subparser and the action function for this command.
+class Command:
+    """Base class for all commands.
 
-    """
-    subparser = add_parser_compat(subparsers, 'add', aliases=["merge"],
-            help="add networks, merging as much as possible")
+    This class MUST be subclassed. Subclasses MUST define the following methods:
 
-    subparser.add_argument('networks', metavar='NETWORK',
-            type=network_address, nargs='+', help="a network address")
+        __init__(self, subparsers)
 
-    return subparser, do_add
-
-
-def do_add(args):
-    """Add networks together, merging as much as possible."""
-
-    merged = netaddr.cidr_merge(args.networks)
-
-    for i in merged:
-        print(i)
-
-
-
-def register_subtract(subparsers):
-    """Register the sub command on an argparse subparsers object.
-
-    Returns the subparser and the action function for this command.
+        run(self, args)
 
     """
-    subparser = add_parser_compat(subparsers, 'subtract', aliases=["exclude"],
-            help="subtract a network from another, dividing as necessary")
+    def __init__(self, subparsers):
+        """Initialize and register on an argparse subparsers object.
 
-    subparser.add_argument('container', metavar='CONTAINER',
-            type=network_address, help="container network address")
+        Registers Command.run() as an action for the suparser.
 
-    subparser.add_argument('network', metavar='REMOVE', type=network_address,
-            help="network address to remove")
+        """
 
-    return subparser, do_subtract
+        raise NotImplementedError("BUG: Command.__init__() must be overriden")
+
+    def run(self, args):
+        """Execute the command, with a list of arguments.
+
+        This must be overriden. It is meant to be called as an action
+        function, by the main arg parser.
+
+        """
+        raise NotImplementedError("BUG: Command.run() must be overriden")
+
+    @staticmethod
+    def add_parser_compat(subparsers, *args, **kwargs):
+        """Add a parser to an argparse subparsers object.
+
+        Adds the parser in a Python 2/3 compatible manner. In particular,
+        Python 2's argparse doesn't support the aliases keyword argument to
+        add_parser(). Uses this option if possible, omits it otherwise.
+
+        """
+        if sys.version_info >= (3, 2):
+            kwargs2 = kwargs
+        else:
+            # Python 2.x's argparse doesn't support the "aliases" keyword
+            # argument. Remove it if present.
+            kwargs2 = kwargs.copy()
+            try:
+                del kwargs2['aliases']
+            except KeyError:
+                # there is no "aliases", original error was something else
+                raise e
+
+        subparser = subparsers.add_parser(*args, **kwargs2)
+
+        return subparser
 
 
-def do_subtract(args):
-    """Subtract a network from another, dividing as necessary."""
-
-    remainder = netaddr.cidr_exclude(args.container, args.network)
-
-    for i in remainder:
-        print(i)
 
 
+class AddCommand(Command):
+    def __init__(self, subparsers):
+        """Initialize and register on an argparse subparsers object."""
 
-command_registrators = [
-    register_add, register_subtract,
+        subparser = self.add_parser_compat(subparsers, 'add', aliases=["merge"],
+                help="add networks, merging as much as possible")
+
+        subparser.add_argument('networks', metavar='NETWORK',
+                type=_network_address, nargs='+', help="a network address")
+
+        subparser.set_defaults(func=self.run)
+
+    def run(self, args):
+        """Add networks together, merging as much as possible."""
+
+        merged = netaddr.cidr_merge(args.networks)
+
+        for i in merged:
+            print(i)
+
+
+class SubtractCommand(Command):
+    def __init__(self, subparsers):
+        """Initialize and register on an argparse subparsers object."""
+
+        subparser = self.add_parser_compat(subparsers, 'subtract', aliases=["exclude"],
+                help="subtract a network from another, dividing as necessary")
+
+        subparser.add_argument('container', metavar='CONTAINER',
+                type=_network_address, help="container network address")
+
+        subparser.add_argument('network', metavar='REMOVE', type=_network_address,
+                help="network address to remove")
+
+        subparser.set_defaults(func=self.run)
+
+    def run(self, args):
+        """Subtract a network from another, dividing as necessary."""
+
+        remainder = netaddr.cidr_exclude(args.container, args.network)
+
+        for i in remainder:
+            print(i)
+
+
+
+commands = [
+    AddCommand, SubtractCommand,
 ]
-"""List of command registrator functions."""
+"""List of command classes."""

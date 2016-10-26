@@ -51,9 +51,8 @@ def parse_args():
 
     subparsers = parser.add_subparsers(help="available commands", metavar="COMMAND")
 
-    for registerer in commands.command_registrators:
-        subparser, func = registerer(subparsers)
-        subparser.set_defaults(func=func)
+    for cls in commands.commands:
+        cls(subparsers)
 
     args = parser.parse_args()
 
