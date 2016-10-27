@@ -57,26 +57,26 @@ class Command:
 
         __init__(self, subparsers)
 
-        run(self, args)
+        func(self, args)
 
     """
     def __init__(self, subparsers):
         """Initialize and register on an argparse subparsers object.
 
-        Registers Command.run() as an action for the suparser.
+        Registers Command.func() as an action for the suparser.
 
         """
 
         raise NotImplementedError("BUG: Command.__init__() must be overriden")
 
-    def run(self, args):
+    def func(self, args):
         """Execute the command, with a list of arguments.
 
         This must be overriden. It is meant to be called as an action
         function, by the main arg parser.
 
         """
-        raise NotImplementedError("BUG: Command.run() must be overriden")
+        raise NotImplementedError("BUG: Command.func() must be overriden")
 
     @staticmethod
     def add_parser_compat(subparsers, *args, **kwargs):
@@ -120,9 +120,9 @@ class AddCommand(Command):
         subparser.add_argument('networks', metavar='NETWORK',
                 type=_network_address, nargs='+', help="a network address")
 
-        subparser.set_defaults(func=self.run)
+        subparser.set_defaults(func=self.func)
 
-    def run(self, args):
+    def func(self, args):
         """Add networks together, merging as much as possible."""
 
         merged = netaddr.cidr_merge(args.networks)
@@ -144,9 +144,9 @@ class SubtractCommand(Command):
         subparser.add_argument('network', metavar='REMOVE', type=_network_address,
                 help="network address to remove")
 
-        subparser.set_defaults(func=self.run)
+        subparser.set_defaults(func=self.func)
 
-    def run(self, args):
+    def func(self, args):
         """Subtract a network from another, dividing as necessary."""
 
         remainder = netaddr.cidr_exclude(args.container, args.network)
@@ -165,9 +165,9 @@ class ExprCommand(Command):
         subparser.add_argument('expression', metavar='EXPRESSION',
                 nargs='+', help="an expression like NETWORK + NETWORK - NETWORK")
 
-        subparser.set_defaults(func=self.run)
+        subparser.set_defaults(func=self.func)
 
-    def run(self, args):
+    def func(self, args):
         """Evaluate an expression of adding and subtracting networks."""
 
         expr = args.expression
