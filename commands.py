@@ -131,8 +131,8 @@ class SubtractCommand(Command):
     def __init__(self, subparsers):
         """Initialize and register on an argparse subparsers object."""
 
-        subparser = self.add_parser_compat(subparsers, 'subtract', aliases=["exclude"],
-                help="subtract a network from another, dividing as necessary")
+        subparser = self.add_parser_compat(subparsers, 'sub', aliases=["remove"],
+                help="subtract a network from another, splitting as necessary")
 
         subparser.add_argument('container', metavar='CONTAINER',
                 type=_network_address, help="container network address")
