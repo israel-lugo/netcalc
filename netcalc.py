@@ -40,6 +40,23 @@ __all__ = [ 'main' ]
 
 
 
+def workaround_argparse_bug(subparsers):
+    """Work around argparse bug on Python 3.3 and above.
+
+    Subcommands should be mandatory, and they are treated as optional.
+    Impact is that argparse will not give an error if the user runs us
+    without any arguments, therefore we break with an exception when trying
+    to call args.func().
+
+    See http://bugs.python.org/issue9253
+
+    """
+    if sys.version_info >= (3, 3):
+        # take advantage of the fact that subparsers is actually an Action,
+        # and directly set its 'required' field
+        subparsers.required = True
+
+
 def parse_args():
     """Parse command-line arguments.
 
@@ -50,6 +67,7 @@ def parse_args():
             description="Advanced network calculator and address planning helper.")
 
     subparsers = parser.add_subparsers(help="available commands", metavar="COMMAND")
+    workaround_argparse_bug(subparsers)
 
     for cls in commands.commands:
         cls(subparsers)
