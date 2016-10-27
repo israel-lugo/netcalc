@@ -82,7 +82,10 @@ def main():
 
     args = parse_args()
 
-    args.func(args)
+    try:
+        args.func(args)
+    except argparse.ArgumentTypeError as e:
+        pass
 
 
 if __name__ == '__main__':

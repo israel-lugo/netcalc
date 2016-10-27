@@ -103,6 +103,10 @@ class Command:
 
         return subparser
 
+    @staticmethod
+    def warn(msg):
+        """Print a warning message to stderr."""
+        sys.stderr.write("warning: %s\n" % msg)
 
 
 
@@ -151,8 +155,57 @@ class SubtractCommand(Command):
             print(i)
 
 
+class ExprCommand(Command):
+    def __init__(self, subparsers):
+        """Initialize and register on an argparse subparsers object."""
+
+        subparser = self.add_parser_compat(subparsers, 'expr', aliases=["math"],
+                help="add and subtract networks using an expression")
+
+        subparser.add_argument('expression', metavar='EXPRESSION',
+                nargs='+', help="an expression like NETWORK + NETWORK - NETWORK")
+
+        subparser.set_defaults(func=self.run)
+
+    def run(self, args):
+        """Evaluate an expression of adding and subtracting networks."""
+
+        expr = args.expression
+        accum = [_network_address(expr.pop(0))]
+
+        while len(expr) >= 2:
+            operator = expr.pop(0)
+            # right-hand side of the expression
+            rhs = _network_address(expr.pop(0))
+
+            if operator in ("+", "add", "merge"):
+                # add (merge) in a new network
+                accum = netaddr.cidr_merge(accum + [rhs])
+            elif operator in ("-", "sub", "remove"):
+                # subtract (remove) a network
+
+                # find most specific network in accum that includes the RHS
+                # (assumes there isn't more than one match, as accum should
+                # never contain overlapping networks)
+                container = netaddr.smallest_matching_cidr(rhs, accum)
+
+                # remove container from accum, unless RHS wasn't there
+                if container is None:
+                    continue
+                accum.remove(container)
+
+                without = netaddr.cidr_exclude(container, rhs)
+                accum = netaddr.cidr_merge(accum + without)
+
+        if expr:
+            self.warn("ignoring extra argument '%s'" % ' '.join(expr))
+
+        for i in accum:
+            print(i)
+
+
 
 commands = [
-    AddCommand, SubtractCommand,
+    AddCommand, SubtractCommand, ExprCommand
 ]
 """List of command classes."""
