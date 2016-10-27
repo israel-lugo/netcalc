@@ -27,6 +27,7 @@
 # Be compatible with Python 3
 from __future__ import print_function
 
+import os
 import sys
 import argparse
 
@@ -66,7 +67,8 @@ def parse_args():
     parser = argparse.ArgumentParser(
             description="Advanced network calculator and address planning helper.")
 
-    subparsers = parser.add_subparsers(help="available commands", metavar="COMMAND")
+    subparsers = parser.add_subparsers(help="available commands",
+            dest="command", metavar="COMMAND")
     workaround_argparse_bug(subparsers)
 
     for cls in commands.commands:
@@ -80,12 +82,14 @@ def parse_args():
 def main():
     """Main program function."""
 
+    prog_name = os.path.basename(sys.argv[0])
     args = parse_args()
 
     try:
         args.func(args)
     except argparse.ArgumentTypeError as e:
-        pass
+        sys.stderr.write("%s %s: error: %s\n" % (prog_name, args.command, str(e)))
+        sys.exit(1)
 
 
 if __name__ == '__main__':
