@@ -28,6 +28,7 @@
 from __future__ import print_function
 
 import sys
+import itertools
 import argparse
 
 import netaddr
@@ -184,18 +185,15 @@ class ExprCommand(Command):
             elif operator in ("-", "sub", "remove"):
                 # subtract (remove) a network
 
-                # find most specific network in accum that includes the RHS
-                # (assumes there isn't more than one match, as accum should
-                # never contain overlapping networks)
-                container = netaddr.smallest_matching_cidr(rhs, accum)
-
-                # remove container from accum, unless RHS wasn't there
-                if container is None:
-                    continue
-                accum.remove(container)
-
-                without = netaddr.cidr_exclude(container, rhs)
-                accum = netaddr.cidr_merge(accum + without)
+                # for each network in accum, remove the RHS from it, then
+                # chain everything into a single flat generator sequence
+                # (RHS may be partially contained in more than one accum
+                # network)
+                minus_rhs = itertools.chain.from_iterable(
+                                netaddr.cidr_exclude(network, rhs)
+                                for network in accum
+                            )
+                accum = netaddr.cidr_merge(minus_rhs)
 
         if expr:
             self.warn("ignoring extra argument '%s'" % ' '.join(expr))
