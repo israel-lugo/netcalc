@@ -112,6 +112,21 @@ class Command:
 
 
 class AddCommand(Command):
+    """Add networks, merging as much as possible.
+
+    Arguments:
+        NETWORK [NETWORK ...]
+
+    Example:
+      >>> parser = argparse.ArgumentParser()
+      >>> subparsers = parser.add_subparsers()
+      >>> add = commands.AddCommand(subparsers)
+      >>> args = parser.parse_args("add 198.18.0.0/24 198.18.1.0/24 10.1/16 10/16".split())
+      >>> args.func(args)
+      10.0.0.0/15
+      198.18.0.0/23
+
+    """
     def __init__(self, subparsers):
         """Initialize and register on an argparse subparsers object."""
 
@@ -133,6 +148,23 @@ class AddCommand(Command):
 
 
 class SubtractCommand(Command):
+    """Subtract a network from another, splitting as necessary.
+
+    Arguments:
+        CONTAINER REMOVE
+
+    Example:
+      >>> parser = argparse.ArgumentParser()
+      >>> subparsers = parser.add_subparsers()
+      >>> add = commands.AddCommand(subparsers)
+      >>> args = parser.parse_args("sub 192.0.2.0/24 192.0.2.0/28".split())
+      >>> args.func(args)
+      192.0.2.16/28
+      192.0.2.32/27
+      192.0.2.64/26
+      192.0.2.128/25
+
+    """
     def __init__(self, subparsers):
         """Initialize and register on an argparse subparsers object."""
 
@@ -157,6 +189,25 @@ class SubtractCommand(Command):
 
 
 class ExprCommand(Command):
+    """Execute an arbitrary arithmetic expression on networks.
+
+    Arguments:
+        NETWORK (+|-) NETWORK [(+|-) NETWORK ...]
+        NETWORK (add|sub) NETWORK [(add|sub) NETWORK ...]
+
+    Possible operators are + or - (add or sub), with left to right
+    associativity.
+
+    Example:
+      >>> parser = argparse.ArgumentParser()
+      >>> subparsers = parser.add_subparsers()
+      >>> expr = commands.ExprCommand(subparsers)
+      >>> args = parser.parse_args("expr 10.16/13 - 10.20/14 + 10/12".split())
+      >>> args.func(args)
+      10.0.0.0/12
+      10.16.0.0/14
+
+    """
     def __init__(self, subparsers):
         """Initialize and register on an argparse subparsers object."""
 
