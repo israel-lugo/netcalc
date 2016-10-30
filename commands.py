@@ -112,7 +112,7 @@ class Command:
 
 
 class AddCommand(Command):
-    """Add networks, merging as much as possible.
+    """Add networks, aggregating as much as possible.
 
     Arguments:
         NETWORK [NETWORK ...]
@@ -130,8 +130,8 @@ class AddCommand(Command):
     def __init__(self, subparsers):
         """Initialize and register on an argparse subparsers object."""
 
-        subparser = self.add_parser_compat(subparsers, 'add', aliases=["merge"],
-                help="add networks, merging as much as possible")
+        subparser = self.add_parser_compat(subparsers, 'add', aliases=["aggregate", "merge"],
+                help="add networks, aggregating as much as possible")
 
         subparser.add_argument('networks', metavar='NETWORK',
                 type=_network_address, nargs='+', help="a network address")
@@ -139,7 +139,7 @@ class AddCommand(Command):
         subparser.set_defaults(func=self.func)
 
     def func(self, args):
-        """Add networks together, merging as much as possible."""
+        """Add networks together, aggregating as much as possible."""
 
         merged = netaddr.cidr_merge(args.networks)
 
