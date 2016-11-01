@@ -1,7 +1,7 @@
 NetCalc
 =======
 
-|license|
+|license| |Codacy Badge|
 
 Advanced network calculator and address planning helper.
 
@@ -92,5 +92,7 @@ along with NetCalc.  If not, see <http://www.gnu.org/licenses/>.
 
 .. |license| image:: https://img.shields.io/badge/license-GPLv3+-blue.svg?maxAge=2592000
    :target: LICENSE
+.. |Codacy Badge| image:: https://api.codacy.com/project/badge/Grade/4479f8bd8ddd4ba58c09867bf97133cd
+   :target: https://www.codacy.com/app/israel-lugo/netcalc
 .. _netaddr: https://github.com/drkjam/netaddr/
 
