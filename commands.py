@@ -51,7 +51,7 @@ def _network_address(string):
 
 
 
-class Command:
+class Command(object):
     """Base class for all commands.
 
     This class MUST be subclassed. Subclasses MUST define the following methods:
