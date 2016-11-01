@@ -57,7 +57,7 @@ Future plans for NetCalc include, in no particular order:
 - new command for static information (netmask/bitmask, IP range)
 - new command for WHOIS queries
 - new command for splitting a network into smaller networks by prefix length
-- being able to specify network arguments through a file
+- ability to specify network arguments through a file
 - ???
 
 Suggestions are quite welcome :)
