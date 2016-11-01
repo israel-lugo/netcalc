@@ -87,7 +87,7 @@ def main():
 
     try:
         args.func(args)
-    except argparse.ArgumentTypeError as e:
+    except command.CommandError as e:
         sys.stderr.write("%s %s: error: %s\n" % (prog_name, args.command, str(e)))
         sys.exit(1)
 

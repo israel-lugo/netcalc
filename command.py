@@ -35,17 +35,41 @@ import netaddr
 
 
 
+class CommandError(Exception):
+    """Base class for errors while executing a command."""
+    def __init__(self, msg):
+        """Initialize and store a message argument."""
+        self.msg = msg
+
+    def __str__(self):
+        """Convert to string."""
+        return self.msg
+
+
+class CommandParseError(CommandError, argparse.ArgumentTypeError):
+    """Error while parsing a command.
+
+    Apart from being a CommandError, this is also a subclass of
+    argparse.ArgumentTypeError. This is so that argparse.parse_args()
+    recognizes this as an argument error, and handles it as such (by
+    printing an error and exiting).
+
+    """
+    pass
+
+
 def _network_address(string):
     """Convert a string to a network address, if possible.
 
-    Returns a netaddr.IPNetwork instance. Raises netaddr.ArgumentTypeError
-    if string is not a valid network.
+    Returns a netaddr.IPNetwork instance. Raises CommandParseError if
+    string is not a valid network. This is meant to be caught by the
+    argparse.arg_parse(), to print an error and exit.
 
     """
     try:
         network = netaddr.IPNetwork(string)
     except netaddr.AddrFormatError:
-        raise argparse.ArgumentTypeError("invalid network address '%s'" % string)
+        raise CommandParseError("invalid network address '%s'" % string)
 
     return network
 
@@ -241,6 +265,8 @@ class ExprCommand(Command):
                                 for network in accum
                             )
                 accum = netaddr.cidr_merge(minus_rhs)
+            else:
+                raise CommandParseError("invalid operator '%s'" % operator)
 
         if expr:
             self.warn("ignoring extra argument '%s'" % ' '.join(expr))
