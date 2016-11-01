@@ -31,7 +31,7 @@ import os
 import sys
 import argparse
 
-import commands
+import command
 
 
 __version__ = "0.1.0"
@@ -71,7 +71,7 @@ def parse_args():
             dest="command", metavar="COMMAND")
     workaround_argparse_bug(subparsers)
 
-    for cls in commands.commands:
+    for cls in command.commands:
         cls(subparsers)
 
     args = parser.parse_args()
