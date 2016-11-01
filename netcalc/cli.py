@@ -31,10 +31,8 @@ import os
 import sys
 import argparse
 
-import command
-
-
-__version__ = "0.1.0"
+import netcalc.command as command
+from netcalc.version import __version__
 
 
 __all__ = [ 'main' ]

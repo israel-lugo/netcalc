@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 
 # NetCalc - advanced network calculator and address planning helper
 # Copyright (C) 2016 Israel G. Lugo
@@ -16,20 +15,23 @@
 # General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License along
-# with capidup. If not, see <http://www.gnu.org/licenses/>.
+# with NetCalc. If not, see <http://www.gnu.org/licenses/>.
 #
 # For suggestions, feedback or bug reports: israel.lugo@lugosys.com
 
 
 """Advanced network calculator and address planning helper.
 
-This is the command line script, for running from the source directory
-without installing.
+NetCalc is a tool made by network admins, for network admins. It supports
+adding (aggregating) networks, subtracting a network from a larger network,
+doing addition and subtraction of multiple networks at once, and more
+functionality is to come in future releases.
+
+NetCalc supports both IPv4 and IPv6, and works very efficiently even with very
+large networks. It uses the excellent netaddr library for the core address
+manipulation.
+
+This program requires either Python 3 (recommended) or Python 2.
 
 """
-
-from cli import main
-
-if __name__ == '__main__':
-    main()
 
