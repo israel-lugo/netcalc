@@ -68,7 +68,7 @@ Contact
 
 NetCalc is developed by Israel G. Lugo <israel.lugo@lugosys.com>. Main
 repository for cloning, submitting issues and/or forking is at
-https://github.com/israel-lugo/netcalc/
+https://github.com/israel-lugo/netcalc
 
 
 License
@@ -94,5 +94,5 @@ along with NetCalc.  If not, see <http://www.gnu.org/licenses/>.
    :target: LICENSE
 .. |Codacy Badge| image:: https://api.codacy.com/project/badge/Grade/4479f8bd8ddd4ba58c09867bf97133cd
    :target: https://www.codacy.com/app/israel-lugo/netcalc
-.. _netaddr: https://github.com/drkjam/netaddr/
+.. _netaddr: https://github.com/drkjam/netaddr
 
