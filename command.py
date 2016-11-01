@@ -254,3 +254,6 @@ commands = [
     AddCommand, SubtractCommand, ExprCommand
 ]
 """List of command classes."""
+
+
+# vim: set expandtab smarttab shiftwidth=4 softtabstop=4 tw=75 :
