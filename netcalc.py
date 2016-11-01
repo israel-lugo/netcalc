@@ -16,7 +16,7 @@
 # General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License along
-# with capidup. If not, see <http://www.gnu.org/licenses/>.
+# with NetCalc. If not, see <http://www.gnu.org/licenses/>.
 #
 # For suggestions, feedback or bug reports: israel.lugo@lugosys.com
 
