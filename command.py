@@ -94,11 +94,7 @@ class Command(object):
             # Python 2.x's argparse doesn't support the "aliases" keyword
             # argument. Remove it if present.
             kwargs2 = kwargs.copy()
-            try:
-                del kwargs2['aliases']
-            except KeyError:
-                # there is no "aliases", original error was something else
-                raise e
+            del kwargs2['aliases']
 
         subparser = subparsers.add_parser(*args, **kwargs2)
 
