@@ -44,7 +44,7 @@ def _network_address(string):
     """
     try:
         network = netaddr.IPNetwork(string)
-    except netaddr.AddrFormatError as e:
+    except netaddr.AddrFormatError:
         raise argparse.ArgumentTypeError("invalid network address '%s'" % string)
 
     return network
