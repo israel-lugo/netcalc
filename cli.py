@@ -67,6 +67,12 @@ def parse_args():
     parser = argparse.ArgumentParser(
             description="Advanced network calculator and address planning helper.")
 
+    # This doesn't show license information, a la GNU. Would be nice.
+    # Create a custom Action that prints what we want and exits?  Can't
+    # place everything in "version" string, because the default formatter
+    # wraps everything.
+    parser.add_argument('-V', '--version', action='version', version="NetCalc %s" % __version__)
+
     subparsers = parser.add_subparsers(help="available commands",
             dest="command", metavar="COMMAND")
     workaround_argparse_bug(subparsers)
