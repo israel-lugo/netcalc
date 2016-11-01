@@ -21,7 +21,7 @@
 # For suggestions, feedback or bug reports: israel.lugo@lugosys.com
 
 
-"""Main program file."""
+"""Main CLI user interface."""
 
 
 # Be compatible with Python 3
