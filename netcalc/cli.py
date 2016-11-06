@@ -80,7 +80,7 @@ def parse_args():
     workaround_argparse_bug(subparsers)
 
     for cls in command.commands:
-        cls(subparsers)
+        cls(subparsers, parser)
 
     args = parser.parse_args()
 

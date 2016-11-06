@@ -80,12 +80,12 @@ class Command(object):
 
     This class MUST be subclassed. Subclasses MUST define the following methods:
 
-        __init__(self, subparsers)
+        __init__(self, subparsers, parser)
 
         func(self, args)
 
     """
-    def __init__(self, subparsers):
+    def __init__(self, subparsers, parser):
         """Initialize and register on an argparse subparsers object.
 
         Registers Command.func() as an action for the suparser.
@@ -147,11 +147,12 @@ class AddCommand(Command):
       198.18.0.0/23
 
     """
-    def __init__(self, subparsers):
+    def __init__(self, subparsers, parser):
         """Initialize and register on an argparse subparsers object."""
 
         subparser = self.add_parser_compat(subparsers, 'add', aliases=["aggregate", "merge"],
-                help="add networks, aggregating as much as possible")
+                help="add networks, aggregating as much as possible",
+                epilog=parser.epilog)
 
         subparser.add_argument('networks', metavar='NETWORK',
                 type=_network_address, nargs='+', help="a network address")
@@ -185,11 +186,12 @@ class SubtractCommand(Command):
       192.0.2.128/25
 
     """
-    def __init__(self, subparsers):
+    def __init__(self, subparsers, parser):
         """Initialize and register on an argparse subparsers object."""
 
         subparser = self.add_parser_compat(subparsers, 'sub', aliases=["remove"],
-                help="subtract a network from another, splitting as necessary")
+                help="subtract a network from another, splitting as necessary",
+                epilog=parser.epilog)
 
         subparser.add_argument('container', metavar='CONTAINER',
                 type=_network_address, help="container network address")
@@ -228,11 +230,12 @@ class ExprCommand(Command):
       10.16.0.0/14
 
     """
-    def __init__(self, subparsers):
+    def __init__(self, subparsers, parser):
         """Initialize and register on an argparse subparsers object."""
 
         subparser = self.add_parser_compat(subparsers, 'expr', aliases=["math"],
-                help="add and subtract networks using an expression")
+                help="add and subtract networks using an expression",
+                epilog=parser.epilog)
 
         subparser.add_argument('expression', metavar='EXPRESSION',
                 nargs='+', help="an expression like NETWORK + NETWORK - NETWORK")
