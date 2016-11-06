@@ -18,11 +18,19 @@ Unreleased__
 ------------
 __ https://github.com/israel-lugo/netcalc/compare/v0.1.0...HEAD
 
+Added
+.....
+
+- Arguments can be specified from a text file, one per line. This makes it
+  possible e.g. to specify multiple networks to an ``add`` command. See
+  `issue #2`_.
+
 
 0.1.0_ — 2016-11-01
 -------------------
 
 First production release.
 
+.. _issue #2: https://github.com/israel-lugo/netcalc/issues/2
 
 .. _0.1.0: https://github.com/israel-lugo/netcalc/tree/v0.1.0

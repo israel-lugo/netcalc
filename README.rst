@@ -49,6 +49,51 @@ expr
     2001:db8:2000::/35
 
 
+Reading arguments from a text file
+..................................
+
+Arguments can also be read from a text file, one per line, by referencing the
+file with a ``@``.
+
+This allows things like adding networks from a text file, or calculating arbitrarily long expressions.
+
+For example, given the following file:
+
+networks.txt
+  ::
+
+    198.18.0.0/24
+    198.18.1.0/24
+    10.1/16
+    10/16
+
+These networks could be added like so::
+
+    $ netcalc add @networks.txt
+    10.0.0.0/15
+    198.18.0.0/23
+
+Or, given the file:
+
+/tmp/math.txt
+  ::
+
+    2001:db8::/34
+    -
+    2001:db8::/38
+    +
+    2001:db8:100::/41
+
+This expression could be calculated like so::
+
+    $ netcalc expr @/tmp/math.txt
+    2001:db8:100::/41
+    2001:db8:400::/38
+    2001:db8:800::/37
+    2001:db8:1000::/36
+    2001:db8:2000::/35
+
+
 Future plans
 ------------
 
@@ -57,7 +102,7 @@ Future plans for NetCalc include, in no particular order:
 - new command for static information (netmask/bitmask, IP range)
 - new command for WHOIS queries
 - new command for splitting a network into smaller networks by prefix length
-- ability to specify network arguments through a file
+- ability to read networks from file in different formats (CSV, etc.)
 - ???
 
 Suggestions are quite welcome :)
