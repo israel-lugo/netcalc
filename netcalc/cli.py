@@ -62,8 +62,12 @@ def parse_args():
     Returns a populated namespace with all arguments and their values.
 
     """
+    fromfile_prefix_chars='@'
     parser = argparse.ArgumentParser(
-            description="Advanced network calculator and address planning helper.")
+            fromfile_prefix_chars=fromfile_prefix_chars,
+            description="Advanced network calculator and address planning helper.",
+            epilog="Arguments can be expanded in-place from the contents of a file, by referencing the file with a '%s'."
+                    % fromfile_prefix_chars)
 
     # This doesn't show license information, a la GNU. Would be nice.
     # Create a custom Action that prints what we want and exits?  Can't
