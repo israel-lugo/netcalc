@@ -20,7 +20,7 @@ This program requires either Python 3 (recommended) or Python 2.
 Usage
 -----
 
-Using NetCalc is quite simple. There are three main commands:
+Using NetCalc is quite simple. There are four main commands:
 
 add
   Add networks, aggregating as much as possible. ::
@@ -37,6 +37,15 @@ sub
     192.0.2.32/27
     192.0.2.64/26
     192.0.2.128/25
+
+split
+  Split a network into subnets of a certain length. ::
+
+    $ netcalc split 198.18.64.0/18 20
+    198.18.64.0/20
+    198.18.80.0/20
+    198.18.96.0/20
+    198.18.112.0/20
 
 expr
   Add and subtract networks using an arbitrarily long mathematical expression. ::
