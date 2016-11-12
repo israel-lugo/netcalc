@@ -110,7 +110,7 @@ Future plans for NetCalc include, in no particular order:
 
 - new command for static information (netmask/bitmask, IP range)
 - new command for WHOIS queries
-- new command for splitting a network into smaller networks by prefix length
+- make expr command more generic, allow e.g. splitting subnets
 - ability to read networks from file in different formats (CSV, etc.)
 - ???
 
