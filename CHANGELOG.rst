@@ -18,6 +18,12 @@ Unreleased__
 ------------
 __ https://github.com/israel-lugo/netcalc/compare/v0.2.0...HEAD
 
+Added
+.....
+
+- New command ``split``. Allows splitting a network into subnets of a certain
+  length.
+
 
 0.2.0_ — 2016-11-06
 -------------------

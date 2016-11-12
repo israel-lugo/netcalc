@@ -210,6 +210,62 @@ class SubtractCommand(Command):
             print(i)
 
 
+class SplitCommand(Command):
+    """Split a network into subnets of a certain length.
+
+    Arguments:
+        NETWORK LENGTH
+
+    Example:
+      >>> parser = argparse.ArgumentParser()
+      >>> subparsers = parser.add_subparsers()
+      >>> add = AddCommand(subparsers)
+      >>> args = parser.parse_args("split 198.18.64.0/18 20".split())
+      >>> args.func(args)
+      198.18.64.0/20
+      198.18.80.0/20
+      198.18.96.0/20
+      198.18.112.0/20
+
+    """
+    def __init__(self, subparsers, parser):
+        """Initialize and register on an argparse subparsers object."""
+
+        subparser = self.add_parser_compat(subparsers, 'split',
+                aliases=["divide"],
+                help="split a network into subnets of a certain length",
+                epilog=parser.epilog)
+
+        subparser.add_argument('network', metavar='NETWORK',
+                type=_network_address, help="a network address")
+
+        subparser.add_argument('length', metavar='LENGTH', type=int,
+                help="prefix length")
+
+        subparser.set_defaults(func=self.func)
+
+    def func(self, args):
+        """Split a network into subnets of a certain length."""
+
+        ipnetwork = netaddr.IPNetwork(args.network)
+
+        if ipnetwork.version == 4:
+            maxlen = 32
+        elif ipnetwork.version == 6:
+            maxlen = 128
+        else:
+            raise RuntimeError("unexpected IP version")
+
+        if not ipnetwork.prefixlen <= args.length <= maxlen:
+            raise CommandParseError("invalid prefix length, must be between %d and %d"
+                    % (ipnetwork.prefixlen, maxlen))
+
+        subnets = ipnetwork.subnet(args.length)
+
+        for i in subnets:
+            print(i)
+
+
 class ExprCommand(Command):
     """Execute an arbitrary arithmetic expression on networks.
 
@@ -280,7 +336,7 @@ class ExprCommand(Command):
 
 
 commands = [
-    AddCommand, SubtractCommand, ExprCommand
+    AddCommand, SubtractCommand, SplitCommand, ExprCommand
 ]
 """List of command classes."""
 
