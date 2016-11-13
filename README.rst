@@ -105,6 +105,49 @@ This expression could be calculated like so::
     2001:db8:2000::/35
 
 
+
+Installing
+----------
+
+Using pip
+.........
+
+The easiest way to install NetCalc is through the official
+`Python Package Index`_, using a package manager such as pip_::
+
+    $ sudo pip install netcalc
+
+This will install NetCalc globally, and take care of installing all necessary
+dependencies first.
+
+It is also possible to install only to the local user's environment, without
+changing the global system::
+
+    $ pip install --user netcalc
+
+This will install NetCalc in the user's environment, which can be e.g. in
+``~/.local`` in GNU/Linux, UNIX and Mac OSX, or ``%APPDATA%\Python`` in
+Windows. You will need to run ``netcalc`` from within the user environment: on
+GNU/Linux for example, this will be ``~/.local/bin/netcalc``.
+
+From source
+...........
+
+NetCalc can also be run directly from the source directory, as long as the
+requirements are already installed.
+
+The only requirement is netaddr_. On a Debian or Ubuntu system, install the
+``python3-netaddr`` package (for Python 3), or ``python-netaddr`` (for Python
+2). On a Gentoo system, install ``dev-python/netaddr``.
+
+To run from source, just execute ``./netcalc.py`` from within the root of the
+source directory::
+
+    $ cd netcalc
+    $ ./netcalc.py add 10.0.0.24/29 10.0.0.16/29
+    10.0.0.16/28
+
+
 Future plans
 ------------
 
@@ -114,6 +157,7 @@ Future plans for NetCalc include, in no particular order:
 - new command for WHOIS queries
 - make expr command more generic, allow e.g. splitting subnets
 - ability to read networks from file in different formats (CSV, etc.)
+- create packages for common GNU/Linux distributions, and installer for Windows
 - ???
 
 Suggestions are quite welcome :)
@@ -154,4 +198,6 @@ along with NetCalc.  If not, see <http://www.gnu.org/licenses/>.
 .. |Codacy Badge| image:: https://api.codacy.com/project/badge/Grade/4479f8bd8ddd4ba58c09867bf97133cd
    :target: https://www.codacy.com/app/israel-lugo/netcalc
 .. _netaddr: https://github.com/drkjam/netaddr
+.. _Python Package Index: https://pypi.python.org/pypi/netcalc/
+.. _pip: https://pip.pypa.io/en/stable/
 
