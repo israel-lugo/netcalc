@@ -17,6 +17,7 @@ manipulation.
 This program requires either Python 3 (recommended) or Python 2.
 
 .. contents::
+   :backlinks: none
 
 
 Usage
