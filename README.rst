@@ -23,61 +23,81 @@ This program requires either Python 3 (recommended) or Python 2.
 Usage
 -----
 
-Using NetCalc is quite simple. There are five main commands:
+Using NetCalc is quite simple. All functionality is split into commands, each
+of which receive their own set of specific arguments.
 
-add
-  Add networks, aggregating as much as possible. ::
+add command
+...........
 
-    $ netcalc add 198.18.0.0/24 198.18.1.0/24 10.1/16 10/16
-    10.0.0.0/15
-    198.18.0.0/23
+Add networks, aggregating as much as possible. ::
 
-add-file
-  Add networks from a file, aggregating as much as possible.
+  $ netcalc add 198.18.0.0/24 198.18.1.0/24 10.1/16 10/16
+  10.0.0.0/15
+  198.18.0.0/23
 
-  For example, given the following file:
+This command can be very useful e.g. for calculating a minimal set of prefixes
+to announce with BGP.
 
-  networks.txt
-    ::
+Another real-life example would be comparing the routing tables from two
+separate routers (each with prefixes broken up in different ways), to see if
+they are equivalent (both cover the same networks). If the aggregate from one
+router matches the aggregate from the other, then they are indeed equivalent.
 
-      198.18.0.0/24
-      198.18.1.0/24
-      10.1/16
-      10/16
+add-file command
+................
 
-  These networks could be added like so::
+Add networks from a file, aggregating as much as possible.
 
-    $ netcalc add-file networks.txt
-    10.0.0.0/15
-    198.18.0.0/23
+This is a variant of the ``add`` command above, which reads the networks from a
+file (one per line). For example, given the following file:
 
-sub
-  Subtract a network from another, splitting as necessary. ::
+networks.txt
+  ::
 
-    $ netcalc sub 192.0.2.0/24 192.0.2.0/28
-    192.0.2.16/28
-    192.0.2.32/27
-    192.0.2.64/26
-    192.0.2.128/25
+    198.18.0.0/24
+    198.18.1.0/24
+    10.1/16
+    10/16
 
-split
-  Split a network into subnets of a certain length. ::
+These networks could be added like so::
 
-    $ netcalc split 198.18.64.0/18 20
-    198.18.64.0/20
-    198.18.80.0/20
-    198.18.96.0/20
-    198.18.112.0/20
+  $ netcalc add-file networks.txt
+  10.0.0.0/15
+  198.18.0.0/23
 
-expr
-  Add and subtract networks using an arbitrarily long mathematical expression. ::
+sub command
+...........
 
-    $ netcalc expr 2001:db8::/34 - 2001:db8::/38 + 2001:db8:100::/41
-    2001:db8:100::/41
-    2001:db8:400::/38
-    2001:db8:800::/37
-    2001:db8:1000::/36
-    2001:db8:2000::/35
+Subtract a network from another, splitting as necessary. ::
+
+  $ netcalc sub 192.0.2.0/24 192.0.2.0/28
+  192.0.2.16/28
+  192.0.2.32/27
+  192.0.2.64/26
+  192.0.2.128/25
+
+split command
+.............
+
+Split a network into subnets of a certain length. ::
+
+  $ netcalc split 198.18.64.0/18 20
+  198.18.64.0/20
+  198.18.80.0/20
+  198.18.96.0/20
+  198.18.112.0/20
+
+expr command
+............
+
+Add and subtract networks using an arbitrarily long mathematical expression. ::
+
+  $ netcalc expr 2001:db8::/34 - 2001:db8::/38 + 2001:db8:100::/41
+  2001:db8:100::/41
+  2001:db8:400::/38
+  2001:db8:800::/37
+  2001:db8:1000::/36
+  2001:db8:2000::/35
 
 
 Expanding arguments from a text file
