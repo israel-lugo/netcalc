@@ -168,6 +168,58 @@ class AddCommand(Command):
             print(i)
 
 
+class AddFileCommand(Command):
+    """Add networks read from a file.
+
+    Arguments:
+        FILE
+
+    Example:
+      >>> parser = argparse.ArgumentParser()
+      >>> subparsers = parser.add_subparsers()
+      >>> addfile = AddFileCommand(subparsers, parser)
+      >>> args = parser.parse_args("add-file /path/to/file.txt".split())
+      >>> args.func(args)
+      10.0.0.0/15
+      198.18.0.0/23
+
+    """
+    def __init__(self, subparsers, parser):
+        """Initialize and register on an argparse subparsers object."""
+
+        subparser = self.add_parser_compat(subparsers, 'add-file',
+                aliases=["aggregate-file", "merge-file"],
+                help="add networks from a file, aggregating as much as possible",
+                epilog=parser.epilog)
+
+        subparser.add_argument('file_', metavar='FILE',
+                type=argparse.FileType('rt'),
+                help="file from which to read the networks")
+
+        subparser.set_defaults(func=self.func)
+
+    def func(self, args):
+        """Add networks from a file, aggregating as much as possible."""
+
+        networks = self._networks_from_file(args.file_)
+        merged = netaddr.cidr_merge(networks)
+
+        for i in merged:
+            print(i)
+
+    @staticmethod
+    def _networks_from_file(file_):
+        """Parse a file and return an iterator of IPNetwork objects."""
+
+        # TODO: Support other filetypes, with some kind of --format option
+        # from our argument parsing
+
+        for line in file_:
+            stripped = line.strip()
+            if stripped:
+                yield _network_address(stripped)
+
+
 class SubtractCommand(Command):
     """Subtract a network from another, splitting as necessary.
 
@@ -336,7 +388,7 @@ class ExprCommand(Command):
 
 
 commands = [
-    AddCommand, SubtractCommand, SplitCommand, ExprCommand
+    AddCommand, AddFileCommand, SubtractCommand, SplitCommand, ExprCommand
 ]
 """List of command classes."""
 
