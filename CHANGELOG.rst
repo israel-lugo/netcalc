@@ -16,13 +16,17 @@ fixes, that don't change the public interface.
 
 Unreleased__
 ------------
-__ https://github.com/israel-lugo/netcalc/compare/v0.3.1...HEAD
+__ https://github.com/israel-lugo/netcalc/compare/v0.4.0...HEAD
+
+
+0.4.0_ — 2016-11-18
+-------------------
 
 Added
 .....
 
 - New command ``add-file``. Works like ``add``, but reads the list of networks
-  from a file (one per line).
+  from a file (one per line). See `issue #2`_.
 
 
 0.3.1_ — 2016-11-13
@@ -62,6 +66,7 @@ First production release.
 
 .. _issue #2: https://github.com/israel-lugo/netcalc/issues/2
 
+.. _0.4.0: https://github.com/israel-lugo/netcalc/tree/v0.4.0
 .. _0.3.1: https://github.com/israel-lugo/netcalc/tree/v0.3.1
 .. _0.3.0: https://github.com/israel-lugo/netcalc/tree/v0.3.0
 .. _0.2.0: https://github.com/israel-lugo/netcalc/tree/v0.2.0
