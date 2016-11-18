@@ -23,12 +23,31 @@ This program requires either Python 3 (recommended) or Python 2.
 Usage
 -----
 
-Using NetCalc is quite simple. There are four main commands:
+Using NetCalc is quite simple. There are five main commands:
 
 add
   Add networks, aggregating as much as possible. ::
 
     $ netcalc add 198.18.0.0/24 198.18.1.0/24 10.1/16 10/16
+    10.0.0.0/15
+    198.18.0.0/23
+
+add-file
+  Add networks from a file, aggregating as much as possible.
+
+  For example, given the following file:
+
+  networks.txt
+    ::
+
+      198.18.0.0/24
+      198.18.1.0/24
+      10.1/16
+      10/16
+
+  These networks could be added like so::
+
+    $ netcalc add-file networks.txt
     10.0.0.0/15
     198.18.0.0/23
 
