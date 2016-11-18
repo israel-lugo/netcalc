@@ -140,7 +140,7 @@ class AddCommand(Command):
     Example:
       >>> parser = argparse.ArgumentParser()
       >>> subparsers = parser.add_subparsers()
-      >>> add = AddCommand(subparsers)
+      >>> add = AddCommand(subparsers, parser)
       >>> args = parser.parse_args("add 198.18.0.0/24 198.18.1.0/24 10.1/16 10/16".split())
       >>> args.func(args)
       10.0.0.0/15
@@ -177,7 +177,7 @@ class SubtractCommand(Command):
     Example:
       >>> parser = argparse.ArgumentParser()
       >>> subparsers = parser.add_subparsers()
-      >>> add = AddCommand(subparsers)
+      >>> sub = SubCommand(subparsers, parser)
       >>> args = parser.parse_args("sub 192.0.2.0/24 192.0.2.0/28".split())
       >>> args.func(args)
       192.0.2.16/28
@@ -219,7 +219,7 @@ class SplitCommand(Command):
     Example:
       >>> parser = argparse.ArgumentParser()
       >>> subparsers = parser.add_subparsers()
-      >>> add = AddCommand(subparsers)
+      >>> split = SplitCommand(subparsers, parser)
       >>> args = parser.parse_args("split 198.18.64.0/18 20".split())
       >>> args.func(args)
       198.18.64.0/20
@@ -279,7 +279,7 @@ class ExprCommand(Command):
     Example:
       >>> parser = argparse.ArgumentParser()
       >>> subparsers = parser.add_subparsers()
-      >>> expr = ExprCommand(subparsers)
+      >>> expr = ExprCommand(subparsers, parser)
       >>> args = parser.parse_args("expr 10.16/13 - 10.20/14 + 10/12".split())
       >>> args.func(args)
       10.0.0.0/12
