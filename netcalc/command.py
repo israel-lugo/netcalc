@@ -159,13 +159,71 @@ class AddCommand(Command):
 
         subparser.set_defaults(func=self.func)
 
-    def func(self, args):
-        """Add networks together, aggregating as much as possible."""
+    @staticmethod
+    def _get_networks(args):
+        """Get the IPNetwork objects to work on.
 
-        merged = netaddr.cidr_merge(args.networks)
+        This method is useful for subclasses to redefine, to specify a
+        different way of getting the networks.
+
+        """
+        return args.networks
+
+    def func(self, args):
+        """Add networks together, aggregating as much as possible.
+
+        Uses self._get_networks() to get the networks. Subclasses may
+        want to redefine that method.
+
+        """
+        networks = self._get_networks(args)
+        merged = netaddr.cidr_merge(networks)
 
         for i in merged:
             print(i)
+
+
+class AddFileCommand(AddCommand):
+    """AddCommand variant that reads the networks from a file.
+
+    Arguments:
+        FILE
+
+    Example:
+      >>> parser = argparse.ArgumentParser()
+      >>> subparsers = parser.add_subparsers()
+      >>> addfile = AddFileCommand(subparsers, parser)
+      >>> args = parser.parse_args("add-file /path/to/file.txt".split())
+      >>> args.func(args)
+      10.0.0.0/15
+      198.18.0.0/23
+
+    """
+    def __init__(self, subparsers, parser):
+        """Initialize and register on an argparse subparsers object."""
+
+        subparser = self.add_parser_compat(subparsers, 'add-file',
+                aliases=["aggregate-file", "merge-file"],
+                help="add networks from a file, aggregating as much as possible",
+                epilog=parser.epilog)
+
+        subparser.add_argument('file_', metavar='FILE',
+                type=argparse.FileType('rt'),
+                help="file from which to read the networks")
+
+        subparser.set_defaults(func=self.func)
+
+    @staticmethod
+    def _get_networks(args):
+        """Get the IPNetwork objects to work on."""
+
+        # TODO: Support other filetypes, with some kind of --format option
+        # from our argument parsing
+
+        for line in args.file_:
+            stripped = line.strip()
+            if stripped:
+                yield _network_address(stripped)
 
 
 class SubtractCommand(Command):
@@ -336,7 +394,7 @@ class ExprCommand(Command):
 
 
 commands = [
-    AddCommand, SubtractCommand, SplitCommand, ExprCommand
+    AddCommand, AddFileCommand, SubtractCommand, SplitCommand, ExprCommand
 ]
 """List of command classes."""
 

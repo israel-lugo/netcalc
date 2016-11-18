@@ -18,6 +18,12 @@ Unreleased__
 ------------
 __ https://github.com/israel-lugo/netcalc/compare/v0.3.1...HEAD
 
+Added
+.....
+
+- New command ``add-file``. Works like ``add``, but reads the list of networks
+  from a file (one per line).
+
 
 0.3.1_ — 2016-11-13
 -------------------
