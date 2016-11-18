@@ -159,17 +159,32 @@ class AddCommand(Command):
 
         subparser.set_defaults(func=self.func)
 
-    def func(self, args):
-        """Add networks together, aggregating as much as possible."""
+    @staticmethod
+    def _get_networks(args):
+        """Get the IPNetwork objects to work on.
 
-        merged = netaddr.cidr_merge(args.networks)
+        This method is useful for subclasses to redefine, to specify a
+        different way of getting the networks.
+
+        """
+        return args.networks
+
+    def func(self, args):
+        """Add networks together, aggregating as much as possible.
+
+        Uses self._get_networks() to get the networks. Subclasses may
+        want to redefine that method.
+
+        """
+        networks = self._get_networks(args)
+        merged = netaddr.cidr_merge(networks)
 
         for i in merged:
             print(i)
 
 
-class AddFileCommand(Command):
-    """Add networks read from a file.
+class AddFileCommand(AddCommand):
+    """AddCommand variant that reads the networks from a file.
 
     Arguments:
         FILE
@@ -198,23 +213,14 @@ class AddFileCommand(Command):
 
         subparser.set_defaults(func=self.func)
 
-    def func(self, args):
-        """Add networks from a file, aggregating as much as possible."""
-
-        networks = self._networks_from_file(args.file_)
-        merged = netaddr.cidr_merge(networks)
-
-        for i in merged:
-            print(i)
-
     @staticmethod
-    def _networks_from_file(file_):
-        """Parse a file and return an iterator of IPNetwork objects."""
+    def _get_networks(args):
+        """Get the IPNetwork objects to work on."""
 
         # TODO: Support other filetypes, with some kind of --format option
         # from our argument parsing
 
-        for line in file_:
+        for line in args.file_:
             stripped = line.strip()
             if stripped:
                 yield _network_address(stripped)
