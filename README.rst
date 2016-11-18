@@ -80,15 +80,62 @@ expr
     2001:db8:2000::/35
 
 
-Reading arguments from a text file
-..................................
+Expanding arguments from a text file
+....................................
 
-Arguments can also be read from a text file, one per line, by referencing the
-file with a ``@``.
+It is possible to expand command-line arguments from a text file, for any
+command, by referencing the filename with a ``@`` placeholder. The file's
+contents will be read and inserted as though they had been typed at the
+command-line. Each line of text will turn into a separate command line
+argument.
 
-This allows things like adding networks from a text file, or calculating arbitrarily long expressions.
+Argument expansion is useful for commands which don't already support receiving
+a filename from which to read their arguments. Using this, it is possible for
+example to calculate an arbitrarily long expression with the ``expr`` command.
 
 For example, given the following file:
+
+/tmp/math-arguments.txt
+  ::
+
+    2001:db8::/34
+    -
+    2001:db8::/38
+    +
+    2001:db8:100::/41
+
+This expression could be calculated like so::
+
+    $ netcalc expr @/tmp/math-arguments.txt
+    2001:db8:100::/41
+    2001:db8:400::/38
+    2001:db8:800::/37
+    2001:db8:1000::/36
+    2001:db8:2000::/35
+
+It is even possible (albeit perhaps farfetched) to specify the actual command
+within the argument file:
+
+/tmp/arguments.txt
+  ::
+
+    sub
+    10.0.0.0/24
+    10.0.0.64/27
+
+Which would yield::
+
+  $ netcalc @arguments.txt
+  10.0.0.0/26
+  10.0.0.96/27
+  10.0.0.128/25
+
+Of course, it would also be possible to use argument expansion to read networks
+from a file as arguments into the ``add`` command. However, this would be rather
+redundant, as it is equivalent to just using the ``add-file`` command,
+exemplified above.
+
+Given the file:
 
 networks.txt
   ::
@@ -103,27 +150,6 @@ These networks could be added like so::
     $ netcalc add @networks.txt
     10.0.0.0/15
     198.18.0.0/23
-
-Or, given the file:
-
-/tmp/math.txt
-  ::
-
-    2001:db8::/34
-    -
-    2001:db8::/38
-    +
-    2001:db8:100::/41
-
-This expression could be calculated like so::
-
-    $ netcalc expr @/tmp/math.txt
-    2001:db8:100::/41
-    2001:db8:400::/38
-    2001:db8:800::/37
-    2001:db8:1000::/36
-    2001:db8:2000::/35
-
 
 
 Installing
