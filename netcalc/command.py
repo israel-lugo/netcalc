@@ -300,6 +300,10 @@ class SplitCommand(Command):
         subparser.add_argument('length', metavar='LENGTH', type=int,
                 help="prefix length")
 
+        subparser.add_argument('longest', nargs='?', metavar='LONGEST',
+                type=int, default=None,
+                help="longest length, enables hierarchical splitting")
+
         subparser.set_defaults(func=self.func)
 
     def func(self, args):
@@ -314,14 +318,35 @@ class SplitCommand(Command):
         else:
             raise RuntimeError("unexpected IP version")
 
-        if not ipnetwork.prefixlen <= args.length <= maxlen:
+        length = args.length
+        if not ipnetwork.prefixlen <= length <= maxlen:
             raise CommandParseError("invalid prefix length, must be between %d and %d"
                     % (ipnetwork.prefixlen, maxlen))
 
-        subnets = ipnetwork.subnet(args.length)
+        longest = args.longest
+        if longest is None:
+            longest = length
+        elif not length <= longest <= maxlen:
+            raise CommandParseError("invalid longest length, must be between %d and %d"
+                    % (length, maxlen))
 
-        for i in subnets:
-            print(i)
+        # This is essentially a non-recursive Depth-First Search over the
+        # tree of networks, using an iterator as accumulator. We can't
+        # iterate directly over the accumulator, because we're changing it
+        # as we go.
+        accum = ipnetwork.subnet(length)
+        while True:
+            net = next(accum, None)
+            if net is None:
+                break
+
+            depth = net.prefixlen - length
+            print("%s%s" % ('  ' * depth, net))
+
+            if net.prefixlen < longest:
+                # prepend our immediate subnets to the accumulator
+                accum = itertools.chain(net.subnet(net.prefixlen+1), accum)
+
 
 
 class ExprCommand(Command):
