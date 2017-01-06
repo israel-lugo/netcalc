@@ -330,22 +330,28 @@ class SplitCommand(Command):
             raise CommandParseError("invalid longest length, must be between %d and %d"
                     % (length, maxlen))
 
-        # This is essentially a non-recursive Depth-First Search over the
-        # tree of networks, using an iterator as accumulator. We can't
-        # iterate directly over the accumulator, because we're changing it
-        # as we go.
-        accum = ipnetwork.subnet(length)
-        while True:
-            net = next(accum, None)
+        # This is a non-recursive Depth-First Search over the tree of
+        # networks, using a list as accumulator. The items being
+        # accumulated are generators of subnets of a given prefix length.
+        # Inexpensive, memory-wise. We can't iterate directly over the
+        # list, because we're changing it as we go.
+        accum = [ipnetwork.subnet(length)]
+        while accum:
+            subnets = accum[-1]
+
+            # get the next available subnet in this generator
+            net = next(subnets, None)
             if net is None:
-                break
+                # remove empty generator and move on
+                del accum[-1]
+                continue
 
             depth = net.prefixlen - length
             print("%s%s" % ('  ' * depth, net))
 
             if net.prefixlen < longest:
-                # prepend our immediate subnets to the accumulator
-                accum = itertools.chain(net.subnet(net.prefixlen+1), accum)
+                # append our children to the accumulator
+                accum.append(net.subnet(net.prefixlen+1))
 
 
 
