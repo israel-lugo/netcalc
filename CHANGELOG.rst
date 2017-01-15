@@ -16,7 +16,11 @@ fixes, that don't change the public interface.
 
 Unreleased__
 ------------
-__ https://github.com/israel-lugo/netcalc/compare/v0.4.0...HEAD
+__ https://github.com/israel-lugo/netcalc/compare/v0.5.0...HEAD
+
+
+0.5.0_ — 2017-01-15
+-------------------
 
 Added
 .....
@@ -74,6 +78,7 @@ First production release.
 .. _issue #2: https://github.com/israel-lugo/netcalc/issues/2
 .. _issue #7: https://github.com/israel-lugo/netcalc/issues/7
 
+.. _0.5.0: https://github.com/israel-lugo/netcalc/tree/v0.5.0
 .. _0.4.0: https://github.com/israel-lugo/netcalc/tree/v0.4.0
 .. _0.3.1: https://github.com/israel-lugo/netcalc/tree/v0.3.1
 .. _0.3.0: https://github.com/israel-lugo/netcalc/tree/v0.3.0
