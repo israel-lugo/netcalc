@@ -1,6 +1,6 @@
 
 # NetCalc - advanced network calculator and address planning helper
-# Copyright (C) 2016 Israel G. Lugo
+# Copyright (C) 2016, 2017 Israel G. Lugo
 #
 # This file is part of NetCalc.
 #
