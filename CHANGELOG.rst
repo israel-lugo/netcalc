@@ -18,6 +18,12 @@ Unreleased__
 ------------
 __ https://github.com/israel-lugo/netcalc/compare/v0.4.0...HEAD
 
+Added
+.....
+
+- New argument for the ``split`` command, to do a hierarchical split. Shows all
+  the steps from a certain length to a specified maximum length.
+
 
 0.4.0_ — 2016-11-18
 -------------------
