@@ -347,11 +347,18 @@ class SplitCommand(Command):
                 continue
 
             depth = net.prefixlen - length
-            print("%s%s" % ('  ' * depth, net))
+            indent = '  ' * depth
+            print("%s%s" % (indent, net))
 
             if net.prefixlen < longest:
                 # append our children to the accumulator
                 accum.append(net.subnet(net.prefixlen+1))
+            elif net.prefixlen == longest:
+                # optimize for the longest case, where we know there won't
+                # be any children; just print everything at this level
+                fmt = "%s%%s" % indent
+                for net in subnets:
+                    print(fmt % net)
 
 
 
