@@ -86,6 +86,25 @@ Split a network into subnets of a certain length. ::
   198.18.96.0/20
   198.18.112.0/20
 
+It is also possible to do a hierarchical split, showing all the steps from a
+certain length to a specified maximum length::
+
+  $ netcalc split 198.18.64.0/18 19 21
+  198.18.64.0/19
+    198.18.64.0/20
+      198.18.64.0/21
+      198.18.72.0/21
+    198.18.80.0/20
+      198.18.80.0/21
+      198.18.88.0/21
+  198.18.96.0/19
+    198.18.96.0/20
+      198.18.96.0/21
+      198.18.104.0/21
+    198.18.112.0/20
+      198.18.112.0/21
+      198.18.120.0/21
+
 expr command
 ............
 

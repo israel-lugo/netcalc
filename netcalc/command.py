@@ -300,6 +300,10 @@ class SplitCommand(Command):
         subparser.add_argument('length', metavar='LENGTH', type=int,
                 help="prefix length")
 
+        subparser.add_argument('maxlength', nargs='?', metavar='MAXLENGTH',
+                type=int, default=None,
+                help="maximum length, enables hierarchical splitting")
+
         subparser.set_defaults(func=self.func)
 
     def func(self, args):
@@ -314,14 +318,49 @@ class SplitCommand(Command):
         else:
             raise RuntimeError("unexpected IP version")
 
-        if not ipnetwork.prefixlen <= args.length <= maxlen:
+        length = args.length
+        if not ipnetwork.prefixlen <= length <= maxlen:
             raise CommandParseError("invalid prefix length, must be between %d and %d"
                     % (ipnetwork.prefixlen, maxlen))
 
-        subnets = ipnetwork.subnet(args.length)
+        maxlength = args.maxlength
+        if maxlength is None:
+            maxlength = length
+        elif not length <= maxlength <= maxlen:
+            raise CommandParseError("invalid max length, must be between %d and %d"
+                    % (length, maxlen))
 
-        for i in subnets:
-            print(i)
+        # This is a non-recursive Depth-First Search over the tree of
+        # networks, using a list as accumulator. The accumulator contains
+        # tuples (depth, subnets) for a given prefix length. We can't
+        # iterate over the accumulator, because we're changing it as we go.
+        maxdepth = maxlength - length
+        depth = 0
+        accum = [(0, ipnetwork.subnet(length))]
+        while accum:
+            depth, subnets = accum[-1]
+
+            fmt = '  ' * depth + '%s'
+
+            if depth < maxdepth:
+                net = next(subnets, None)
+                if net is None:
+                    # generator was empty; remove and move on
+                    del accum[-1]
+                    continue
+                print(fmt % net)
+
+                # append our children to the accumulator
+                depth += 1
+                accum.append((depth, net.subnet(length+depth)))
+
+            elif depth == maxdepth:
+                # don't expand, just print everything at this level
+                for net in subnets:
+                    print(fmt % net)
+                # remove empty generator
+                del accum[-1]
+
 
 
 class ExprCommand(Command):
