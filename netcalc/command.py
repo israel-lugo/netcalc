@@ -331,34 +331,35 @@ class SplitCommand(Command):
                     % (length, maxlen))
 
         # This is a non-recursive Depth-First Search over the tree of
-        # networks, using a list as accumulator. The items being
-        # accumulated are generators of subnets of a given prefix length.
-        # Inexpensive, memory-wise. We can't iterate directly over the
-        # list, because we're changing it as we go.
-        accum = [ipnetwork.subnet(length)]
+        # networks, using a list as accumulator. The accumulator contains
+        # tuples (depth, subnets) for a given prefix length. We can't
+        # iterate over the accumulator, because we're changing it as we go.
+        maxdepth = longest - length
+        depth = 0
+        accum = [(0, ipnetwork.subnet(length))]
         while accum:
-            subnets = accum[-1]
+            depth, subnets = accum[-1]
 
-            # get the next available subnet in this generator
-            net = next(subnets, None)
-            if net is None:
-                # remove empty generator and move on
-                del accum[-1]
-                continue
+            fmt = '  ' * depth + '%s'
 
-            depth = net.prefixlen - length
-            indent = '  ' * depth
-            print("%s%s" % (indent, net))
+            if depth < maxdepth:
+                net = next(subnets, None)
+                if net is None:
+                    # generator was empty; remove and move on
+                    del accum[-1]
+                    continue
+                print(fmt % net)
 
-            if net.prefixlen < longest:
                 # append our children to the accumulator
-                accum.append(net.subnet(net.prefixlen+1))
-            elif net.prefixlen == longest:
-                # optimize for the longest case, where we know there won't
-                # be any children; just print everything at this level
-                fmt = "%s%%s" % indent
+                depth += 1
+                accum.append((depth, net.subnet(length+depth)))
+
+            elif depth == maxdepth:
+                # don't expand, just print everything at this level
                 for net in subnets:
                     print(fmt % net)
+                # remove empty generator
+                del accum[-1]
 
 
 
