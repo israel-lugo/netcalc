@@ -300,9 +300,9 @@ class SplitCommand(Command):
         subparser.add_argument('length', metavar='LENGTH', type=int,
                 help="prefix length")
 
-        subparser.add_argument('longest', nargs='?', metavar='LONGEST',
+        subparser.add_argument('maxlength', nargs='?', metavar='MAXLENGTH',
                 type=int, default=None,
-                help="longest length, enables hierarchical splitting")
+                help="maximum length, enables hierarchical splitting")
 
         subparser.set_defaults(func=self.func)
 
@@ -323,18 +323,18 @@ class SplitCommand(Command):
             raise CommandParseError("invalid prefix length, must be between %d and %d"
                     % (ipnetwork.prefixlen, maxlen))
 
-        longest = args.longest
-        if longest is None:
-            longest = length
-        elif not length <= longest <= maxlen:
-            raise CommandParseError("invalid longest length, must be between %d and %d"
+        maxlength = args.maxlength
+        if maxlength is None:
+            maxlength = length
+        elif not length <= maxlength <= maxlen:
+            raise CommandParseError("invalid max length, must be between %d and %d"
                     % (length, maxlen))
 
         # This is a non-recursive Depth-First Search over the tree of
         # networks, using a list as accumulator. The accumulator contains
         # tuples (depth, subnets) for a given prefix length. We can't
         # iterate over the accumulator, because we're changing it as we go.
-        maxdepth = longest - length
+        maxdepth = maxlength - length
         depth = 0
         accum = [(0, ipnetwork.subnet(length))]
         while accum:
