@@ -22,7 +22,8 @@ Added
 .....
 
 - New argument for the ``split`` command, to do a hierarchical split. Shows all
-  the steps from a certain length to a specified maximum length.
+  the steps from a certain length to a specified maximum length. See
+  `issue #7`_.
 
 
 0.4.0_ — 2016-11-18
@@ -71,6 +72,7 @@ Added
 First production release.
 
 .. _issue #2: https://github.com/israel-lugo/netcalc/issues/2
+.. _issue #7: https://github.com/israel-lugo/netcalc/issues/7
 
 .. _0.4.0: https://github.com/israel-lugo/netcalc/tree/v0.4.0
 .. _0.3.1: https://github.com/israel-lugo/netcalc/tree/v0.3.1
