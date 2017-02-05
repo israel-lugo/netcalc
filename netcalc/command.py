@@ -511,8 +511,8 @@ class ExprCommand(Command):
 
 
 commands = [
-    InfoCommand, AddCommand, AddFileCommand, SubtractCommand, SplitCommand,
-    ExprCommand
+    AddCommand, AddFileCommand, SubtractCommand, SplitCommand,
+    ExprCommand, InfoCommand,
 ]
 """List of command classes."""
 
