@@ -117,6 +117,25 @@ Add and subtract networks using an arbitrarily long mathematical expression. ::
   2001:db8:1000::/36
   2001:db8:2000::/35
 
+info command
+............
+
+Provide static information about a network. Shows the network address, netmask,
+first and last addresses, and so on. ::
+
+  $ ./netcalc.py info 2001:db8::8000:0:0:a:5/56
+  Compact address   - 2001:db8:0:8000::a:5
+  Expanded address  - 2001:0db8:0000:8000:0000:0000:000a:0005
+  Address type      - Global Unicast
+  Network address   - 2001:db8:0:8000::/56
+  Network mask      - ffff:ffff:ffff:ff00:0:0:0:0
+  Prefix length     - 56
+  Host wildcard     - 0:0:0:ff:ffff:ffff:ffff:ffff
+  Broadcast address - N/A
+  Address count     - 4722366482869645213696
+  First address     - 2001:0db8:0000:8000:0000:0000:0000:0000
+  Last address      - 2001:0db8:0000:80ff:ffff:ffff:ffff:ffff
+
 
 Expanding arguments from a text file
 ....................................

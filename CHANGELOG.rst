@@ -18,6 +18,12 @@ Unreleased__
 ------------
 __ https://github.com/israel-lugo/netcalc/compare/v0.5.0...HEAD
 
+Added
+.....
+
+- New command ``info``. Provides static information on a subnet, e.g. network
+  address, netmask, first and last addresses, and so on. See `issue #3`_.
+
 
 0.5.0_ — 2017-01-15
 -------------------
@@ -76,6 +82,7 @@ Added
 First production release.
 
 .. _issue #2: https://github.com/israel-lugo/netcalc/issues/2
+.. _issue #3: https://github.com/israel-lugo/netcalc/issues/3
 .. _issue #7: https://github.com/israel-lugo/netcalc/issues/7
 
 .. _0.5.0: https://github.com/israel-lugo/netcalc/tree/v0.5.0
