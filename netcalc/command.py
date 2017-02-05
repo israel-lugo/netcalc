@@ -133,6 +133,65 @@ class Command(object):
         sys.stderr.write("warning: %s\n" % msg)
 
 
+class InfoCommand(Command):
+    """Get static information about a network.
+
+    Arguments:
+        NETWORK
+
+    """
+    def __init__(self, subparsers, parser):
+        """Initialize and register on an argparse subparsers object."""
+
+        subparser = self.add_parser_compat(subparsers, 'info',
+                help="get static information about a network",
+                epilog=parser.epilog)
+
+        subparser.add_argument('network', metavar='NETWORK',
+                type=_network_address, help="a network address")
+
+        subparser.set_defaults(func=self.func)
+
+    def func(self, args):
+        """Get static information about a network."""
+
+        net = args.network
+
+        assert net.version in (4, 6)
+
+        if net.version == 4:
+            info_addr = [
+                ('IP address', net.ip),
+            ]
+        else:
+            try:
+                info_type = net.info.IPv6[0].allocation
+            except (AttributeError, IndexError):
+                info_type = "None"
+
+            info_addr = [
+                ('Compact address', net.ip.format(netaddr.ipv6_compact)),
+                ('Expanded address', net.ip.format(netaddr.ipv6_verbose)),
+                ('Address type', info_type),
+            ]
+
+        info = info_addr + [
+            ('Network address', net.cidr),
+            ('Network mask', net.netmask.format(netaddr.ipv6_full)),
+            ('Prefix length', net.prefixlen),
+            ('Host wildcard', net.hostmask.format(netaddr.ipv6_full)),
+            ('Broadcast address', net.broadcast if net.version == 4 else "N/A"),
+            ('Address count', net.size),
+            ('First address', netaddr.IPAddress(net.first, net.version).format(netaddr.ipv6_verbose)),
+            ('Last address', netaddr.IPAddress(net.last, net.version).format(netaddr.ipv6_verbose)),
+        ]
+
+        # padding equal to the longest description length
+        padding = max([len(i[0]) for i in info])
+
+        for descr, value in info:
+            print("%-*s - %s" % (padding, descr, str(value)))
+
 
 class AddCommand(Command):
     """Add networks, aggregating as much as possible.
@@ -436,7 +495,8 @@ class ExprCommand(Command):
 
 
 commands = [
-    AddCommand, AddFileCommand, SubtractCommand, SplitCommand, ExprCommand
+    InfoCommand, AddCommand, AddFileCommand, SubtractCommand, SplitCommand,
+    ExprCommand
 ]
 """List of command classes."""
 
