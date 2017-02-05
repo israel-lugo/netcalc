@@ -139,6 +139,22 @@ class InfoCommand(Command):
     Arguments:
         NETWORK
 
+    Example:
+      >>> parser = argparse.ArgumentParser()
+      >>> subparsers = parser.add_subparsers()
+      >>> info = InfoCommand(subparsers, parser)
+      >>> args = parser.parse_args("info 192.0.2.18/24".split())
+      >>> args.func(args)
+      IP address        - 192.0.2.18
+      Network address   - 192.0.2.0/24
+      Network mask      - 255.255.255.0
+      Prefix length     - 24
+      Host wildcard     - 0.0.0.255
+      Broadcast address - 192.0.2.255
+      Address count     - 256
+      First address     - 192.0.2.0
+      Last address      - 192.0.2.255
+
     """
     def __init__(self, subparsers, parser):
         """Initialize and register on an argparse subparsers object."""
