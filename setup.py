@@ -34,7 +34,7 @@ setup(
     url='https://github.com/israel-lugo/netcalc',
     version=__version__,
     packages=['netcalc'],
-    install_requires=[ 'netaddr>=0.7.18' ],
+    install_requires=[ 'netaddr>=0.7.12' ],
     entry_points={
         'console_scripts': [ 'netcalc=netcalc.cli:main' ],
     },
