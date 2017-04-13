@@ -27,7 +27,24 @@
 # Be compatible with Python 3
 from __future__ import print_function
 
+import re
 import netaddr
+
+
+
+def _network_or_none(string):
+    """Convert a string to a network address, or return None.
+
+    Returns a netaddr.IPNetwork instance if the string is a valid network.
+    Returns None otherwise.
+
+    """
+    try:
+        network = netaddr.IPNetwork(string)
+    except netaddr.AddrFormatError:
+        network = None
+
+    return network
 
 
 class NetworkSource(object):
@@ -71,6 +88,28 @@ class NetworkSourceFile(NetworkSource):
             stripped = line.strip()
             if stripped:
                 yield netaddr.IPNetwork(stripped)
+
+class NetworkSourceFileDetect(NetworkSourceFile):
+    """Source networks from a file, autodetect."""
+
+    _ipv4_like = r"(?:(?<!\.)\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?:/\d{1,2})?\b(?!\.))"
+
+    # TODO: Create a regexp for IPv6-like strings, and combine them
+
+    _re_network_like = re.compile(_ipv4_like)
+
+    def __iter__(self):
+        """Iterate over the networks."""
+        for line in self._file:
+            # look for stuff that sort of looks like it might be a network
+            maybe_networks = self._re_network_like.finditer(line)
+
+            # check the possible networks and yield valid ones
+            for maybe_network in maybe_networks:
+                network = _network_or_none(network.group(0))
+
+                if network is not None:
+                    yield network
 
 
 # vim: set expandtab smarttab shiftwidth=4 softtabstop=4 tw=75 :

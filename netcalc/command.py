@@ -66,6 +66,7 @@ def _network_address(string):
     argparse.arg_parse(), to print an error and exit.
 
     """
+    # TODO: Rebuild this as a wrapper around netsources._network_or_none()
     try:
         network = netaddr.IPNetwork(string)
     except netaddr.AddrFormatError:
