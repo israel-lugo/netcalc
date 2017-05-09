@@ -215,7 +215,7 @@ Installing
 Using pip
 .........
 
-The easiest way to install NetCalc is through the official
+The easiest, portable, way to install NetCalc is through the official
 `Python Package Index`_, using a package manager such as pip_::
 
     $ sudo pip install netcalc
@@ -232,6 +232,20 @@ This will install NetCalc in the user's environment, which can be e.g. in
 ``~/.local`` in GNU/Linux, UNIX and Mac OSX, or ``%APPDATA%\Python`` in
 Windows. You will need to run ``netcalc`` from within the user environment: on
 GNU/Linux for example, this will be ``~/.local/bin/netcalc``.
+
+From the operating system's package manager
+...........................................
+
+There are packages available for Debian Jessie (.deb), which should also work
+for Ubuntu Linux:
+
+- python-netcalc_ (for Python 2)
+- python3-netcalc_ (for Python 3)
+
+A package for Gentoo Linux (ebuild) is also planned for future releases.
+
+.. TODO: Self-host the packages. Don't rely on Github for everything.
+
 
 From source
 ...........
@@ -303,4 +317,6 @@ along with NetCalc.  If not, see <http://www.gnu.org/licenses/>.
 .. _netaddr: https://github.com/drkjam/netaddr
 .. _Python Package Index: https://pypi.python.org/pypi/netcalc/
 .. _pip: https://pip.pypa.io/en/stable/
+.. _python-netcalc: https://github.com/israel-lugo/netcalc/releases/download/v0.6.2/python-netcalc_0.6.2-1_all.deb
+.. _python3-netcalc: https://github.com/israel-lugo/netcalc/releases/download/v0.6.2/python3-netcalc_0.6.2-1_all.deb
 

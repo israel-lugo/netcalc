@@ -16,7 +16,16 @@ fixes, that don't change the public interface.
 
 Unreleased__
 ------------
-__ https://github.com/israel-lugo/netcalc/compare/v0.6.1...HEAD
+__ https://github.com/israel-lugo/netcalc/compare/v0.6.2...HEAD
+
+
+0.6.2_ — 2017-05-09
+-------------------
+
+Added
+.....
+
+- Mention Debian packages on the README, and link to them.
 
 
 0.6.1_ — 2017-02-07
@@ -99,6 +108,7 @@ First production release.
 .. _issue #3: https://github.com/israel-lugo/netcalc/issues/3
 .. _issue #7: https://github.com/israel-lugo/netcalc/issues/7
 
+.. _0.6.2: https://github.com/israel-lugo/netcalc/tree/v0.6.2
 .. _0.6.1: https://github.com/israel-lugo/netcalc/tree/v0.6.1
 .. _0.6.0: https://github.com/israel-lugo/netcalc/tree/v0.6.0
 .. _0.5.0: https://github.com/israel-lugo/netcalc/tree/v0.5.0
